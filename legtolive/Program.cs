@@ -67,7 +67,7 @@ void AddNotes(OldFNF.Root root, LiveFNF.Root newRoot, int diff)
 
                     newRoot.events.Add(new Event()
                     {
-                        t = note.sectionNotes[0][0], e = "FocusCamera",
+                        t = (int)note.sectionNotes[0][0], e = "FocusCamera",
                         v = new V() { @char = 0, d = 4, ease = "CLASSIC" }
                     });
                 }
@@ -77,7 +77,7 @@ void AddNotes(OldFNF.Root root, LiveFNF.Root newRoot, int diff)
 
                     newRoot.events.Add(new Event()
                     {
-                        t = note.sectionNotes[0][0], e = "FocusCamera",
+                        t = (int)note.sectionNotes[0][0], e = "FocusCamera",
                         v = new V() { @char = 1, d = 4, ease = "CLASSIC" }
                     });
                 }
@@ -165,7 +165,7 @@ namespace OldFNF
     {
         [JsonProperty("sectionNotes")]
         [JsonPropertyName("sectionNotes")]
-        public List<List<float>> sectionNotes { get; set; }
+        public List<List<object>> sectionNotes { get; set; }
 
         [JsonProperty("lengthInSteps")]
         [JsonPropertyName("lengthInSteps")]
