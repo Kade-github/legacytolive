@@ -165,7 +165,7 @@ namespace OldFNF
     {
         [JsonProperty("sectionNotes")]
         [JsonPropertyName("sectionNotes")]
-        public List<List<int>> sectionNotes { get; set; }
+        public List<List<float>> sectionNotes { get; set; }
 
         [JsonProperty("lengthInSteps")]
         [JsonPropertyName("lengthInSteps")]
