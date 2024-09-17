@@ -86,7 +86,7 @@ void AddNotes(OldFNF.Root root, LiveFNF.Root newRoot, int diff)
 
         foreach (var section in note.sectionNotes)
         {
-            int column = section[1];
+            int column = (int)section[1];
             if (!note.mustHitSection)
             {
                 if (column >= 4)
@@ -97,13 +97,13 @@ void AddNotes(OldFNF.Root root, LiveFNF.Root newRoot, int diff)
             switch(diff)
             {
                 case 1:
-                    newRoot.notes.easy.Add(new Easy() { d = column, t = section[0], l = section[2] });
+                    newRoot.notes.easy.Add(new Easy() { d = column, t = (int)section[0], l = (int)section[2] });
                     break;
                 case 2:
-                    newRoot.notes.normal.Add(new Normal() { d = column, t = section[0], l = section[2] });
+                    newRoot.notes.normal.Add(new Normal() { d = column, t = (int)section[0], l = (int)section[2] });
                     break;
                 case 3:
-                    newRoot.notes.hard.Add(new Hard() { d = column, t = section[0], l = section[2] });
+                    newRoot.notes.hard.Add(new Hard() { d = column, t = (int)section[0], l = (int)section[2] });
                     break;
             }
         }
