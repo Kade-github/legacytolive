@@ -4,6 +4,19 @@ using MetaNewFNF;
 using Newtonsoft.Json;
 using OldFNF;
 
+Console.WriteLine("Type custom diffs (separated by commas, max 3. ex: \"reactive,funky\"), or type nothing for default diffs (easy, normal, hard)");
+
+List<String> customDiffs = new List<string>();
+
+string customDiff = Console.ReadLine();
+
+if (customDiff.Length != 0)
+{
+    customDiffs = customDiff.Split(",").ToList();
+}
+
+customDiff = customDiff.ToLower();
+
 Console.WriteLine("Input chart paths:");
 
 string path = Console.ReadLine();
@@ -29,7 +42,7 @@ foreach (var file in files)
 }
 
 
-if (first.Length == 0 && second.Length == 0 && third.Length == 0) // modded diff
+if (first.Length == 0 && second.Length == 0 && third.Length == 0) // modded diffs
 {
     if (files.Length == 0)
     {
@@ -39,8 +52,31 @@ if (first.Length == 0 && second.Length == 0 && third.Length == 0) // modded diff
     }
     else
     {
-        third = files[0];
-        songName = Path.GetFileNameWithoutExtension(third);
+        if (customDiffs.Count == 0)
+        {
+            Console.WriteLine("Missing custom diffs");
+            Console.Read();
+            return;
+        }
+        foreach (var file in files)
+        {
+            string noExt = Path.GetFileNameWithoutExtension(file);
+            string diff = noExt.Split("-")[1];
+            
+            if (customDiffs.Contains(diff))
+            {
+                int indexOfDiff = customDiffs.IndexOf(diff);
+                
+                if (indexOfDiff == 0)
+                    first = file;
+                else if (indexOfDiff == 1)
+                    second = file;
+                else if (indexOfDiff == 2)
+                    third = file;
+            }
+            
+            songName = noExt;
+        }
     }
 }
 
