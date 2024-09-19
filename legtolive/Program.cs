@@ -2,6 +2,7 @@
 using LiveFNF;
 using MetaNewFNF;
 using Newtonsoft.Json;
+using OldFNF;
 
 Console.WriteLine("Input chart paths:");
 
@@ -9,19 +10,64 @@ string path = Console.ReadLine();
 
 string[] files = Directory.GetFiles(path, "*.json");
 
-string first = files.FirstOrDefault(t => t.Contains("easy"));
-string second = files.FirstOrDefault(t => !t.Contains("easy") && !t.Contains("hard"));
-string third = files.FirstOrDefault(t => t.Contains("hard"));
+string first = "";
+string second = "";
+string third = "";
+
+
+string songName = "";
+
+foreach (var file in files)
+{
+    if (file.Contains("easy"))
+        first = file;
+    else if (file.Contains("normal"))
+        second = file;
+    else if (file.Contains("hard"))
+        third = file;
+    songName = Path.GetFileNameWithoutExtension(file);
+}
+
+
+if (first.Length == 0 && second.Length == 0 && third.Length == 0) // modded diff
+{
+    if (files.Length == 0)
+    {
+        Console.WriteLine("Missing difficulty files");
+        Console.Read();
+        return;
+    }
+    else
+    {
+        third = files[0];
+        songName = Path.GetFileNameWithoutExtension(third);
+    }
+}
+
+if (songName.Contains("-"))
+    songName = songName.Split("-")[0];
 
 Console.WriteLine("reading: " + first);
 
-var old1 = JsonConvert.DeserializeObject<OldFNF.Root>(File.ReadAllText(first));
+var old1 = new OldFNF.Root();
+old1.song = new OldFNF.Song();
+old1.song.notes = new List<Note>();
+if (first != "")
+    old1 = JsonConvert.DeserializeObject<OldFNF.Root>(File.ReadAllText(first));
 Console.WriteLine("reading: " + second);
 
-var old2 = JsonConvert.DeserializeObject<OldFNF.Root>(File.ReadAllText(second));
+var old2 = new OldFNF.Root();
+old2.song = new OldFNF.Song();
+old2.song.notes = new List<Note>();
+if (second != "")
+    old2 = JsonConvert.DeserializeObject<OldFNF.Root>(File.ReadAllText(second));
 Console.WriteLine("reading: " + third);
 
-var old3 = JsonConvert.DeserializeObject<OldFNF.Root>(File.ReadAllText(third));
+var old3 = new OldFNF.Root();
+old3.song = new OldFNF.Song();
+old3.song.notes = new List<Note>();
+if (third != "")
+    old3 = JsonConvert.DeserializeObject<OldFNF.Root>(File.ReadAllText(third));
 
 // convert old to new
 
@@ -120,14 +166,25 @@ void AddNotes(OldFNF.Root root, LiveFNF.Root newRoot, int diff)
 
 newVersion.notes.easy = new List<Easy>();
 
-AddNotes(old1, newVersion, 1); // easy
-AddNotes(old2, newVersion, 2); // normal
-AddNotes(old3, newVersion, 3); // hard
-
+if (old1.song.notes.Count != 0)
+    AddNotes(old1, newVersion, 1); // easy
+else
+{
+    newVersion.notes.easy = new List<Easy>();
+}
+if (old2.song.notes.Count != 0)
+    AddNotes(old2, newVersion, 2); // normal
+else
+{
+    newVersion.notes.normal = new List<Normal>();
+}
+if (old3.song.notes.Count != 0)
+    AddNotes(old3, newVersion, 3); // hard
+else
+{
+    newVersion.notes.hard = new List<Hard>();
+}
 // output
-
-string songName = Path.GetFileNameWithoutExtension(second);
-
 File.WriteAllText(songName+ "-chart.json", JsonConvert.SerializeObject(newVersion, Formatting.Indented));
 
 Console.WriteLine("output to " + Path.GetFullPath(songName+ "-chart.json"));
