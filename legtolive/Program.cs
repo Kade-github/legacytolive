@@ -83,6 +83,7 @@ void AddNotes(OldFNF.Root root, LiveFNF.Root newRoot, int diff) {
 }
 
 void Convertt() {
+  hasAddedEvents = false;
   Console.Clear();
   Console.WriteLine("Type custom diffs (separated by commas, max 3. ex: \",reactive,funky\". First comma empty because theres no easy diff in weekend hex.), or type nothing for default diffs (easy, normal, hard)");
 
