@@ -4,7 +4,7 @@ using MetaNewFNF;
 using Newtonsoft.Json;
 using OldFNF;
 
-Console.WriteLine("Type custom diffs (separated by commas, max 3. ex: \"reactive,funky\"), or type nothing for default diffs (easy, normal, hard)");
+Console.WriteLine("Type custom diffs (separated by commas, max 3. ex: \",reactive,funky\". First comma empty because theres no easy diff in weekend hex.), or type nothing for default diffs (easy, normal, hard)");
 
 List<String> customDiffs = new List<string>();
 
@@ -33,12 +33,20 @@ string songName = "";
 foreach (var file in files)
 {
     if (file.Contains("easy"))
+    {
         first = file;
+        songName = Path.GetFileNameWithoutExtension(file);
+    }
     else if (file.Contains("normal"))
+    {
         second = file;
+        songName = Path.GetFileNameWithoutExtension(file);
+    }
     else if (file.Contains("hard"))
+    {
         third = file;
-    songName = Path.GetFileNameWithoutExtension(file);
+        songName = Path.GetFileNameWithoutExtension(file);
+    }
 }
 
 
@@ -60,8 +68,11 @@ if (first.Length == 0 && second.Length == 0 && third.Length == 0) // modded diff
         }
         foreach (var file in files)
         {
+            if (!file.Contains("-"))
+                continue;
+            
             string noExt = Path.GetFileNameWithoutExtension(file);
-            string diff = noExt.Split("-")[1];
+            string diff = noExt.Split("-").LastOrDefault();
             
             if (customDiffs.Contains(diff))
             {
@@ -73,15 +84,16 @@ if (first.Length == 0 && second.Length == 0 && third.Length == 0) // modded diff
                     second = file;
                 else if (indexOfDiff == 2)
                     third = file;
+                
+                songName = noExt;
             }
             
-            songName = noExt;
         }
     }
 }
 
 if (songName.Contains("-"))
-    songName = songName.Split("-")[0];
+    songName = songName.Substring(0, songName.LastIndexOf("-"));
 
 Console.WriteLine("reading: " + first);
 
